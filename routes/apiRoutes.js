@@ -15,14 +15,12 @@ function verifyToken( req, res, next )
 }
 
 /* GET users listing. */
-router.post('/ntest', function(req, res, next) 
+router.post('/necho', verifyToken, function(req, res, next) 
 {
 	var body = req.body;
 
+	delete body.token;
 	res.send( JSON.stringify( body ) );
-	//should be middleware?
-	
-
 });
 
 module.exports = router;
