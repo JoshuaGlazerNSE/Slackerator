@@ -4,8 +4,9 @@ var router = express.Router();
 function verifyToken( req, res, next )
 {
 	token = req.body.token;
-	if( token != process.env.INCOMING_KEY )
+	if( token !== process.env.INCOMING_KEY )
 	{
+		console.log( "token is " + token + " and expected is " + process.env.INCOMING_KEY );
 		res.status( 403 ).send( "Error: wrong incoming key" )
 	}
 	else
