@@ -19,7 +19,6 @@ function verifyToken( token )
 	}
 }
 
-/* GET users listing. */
 router.post('/necho', verifyToken( process.env.NECHO_TOKEN ), function(req, res) 
 {
 	var body = req.body;
@@ -57,7 +56,16 @@ router.post( '/jira', verifyToken( process.env.JIRA_TOKEN ), function( req, res 
 		body: issue
 	}, function( error, data, body )
 	{
-		res.send( body );
+		if( error )
+		{
+			console.log( "Error: " + error );
+			res.status( 500 ).send( error );
+		}
+		else
+		{
+			console.log( "success: " + body );
+			res.send( body );
+		}
 	} );
 
 } );
