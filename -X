@@ -1,0 +1,15 @@
+HTTP/1.1 405 Method Not Allowed
+Server: nginx
+Date: Sun, 16 Aug 2015 07:43:24 GMT
+Content-Type: text/html;charset=utf-8
+Content-Length: 1056
+Connection: keep-alive
+X-AREQUESTID: 43x27529x1
+X-ASEN: SEN-5256279
+Set-Cookie: atlassian.xsrf.token=BUS7-50KB-U1BQ-R3HM|36d06ed761a32e5fcac8e7b7f2251cdf0a5595b2|lout; Path=/; Secure
+X-AUSERNAME: anonymous
+X-ATENANT-ID: nakedsky.atlassian.net
+Allow: POST,OPTIONS
+X-Content-Type-Options: nosniff
+Content-Language: en
+
