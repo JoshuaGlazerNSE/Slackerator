@@ -41,6 +41,7 @@ router.post( '/jira', verifyToken( process.env.JIRA_TOKEN ), function( req, res 
 				"key": "SCRAP"
 			},
 			"summary": summary,
+			"reporter":{"name":"charles"},
 			"issuetype": 
 			{
 				"name": "Bug"
