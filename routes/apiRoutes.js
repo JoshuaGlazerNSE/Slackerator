@@ -51,7 +51,13 @@ router.post( '/jira', verifyToken( process.env.JIRA_TOKEN ), function( req, res 
 	request(
 	{
 		method: 'POST',
-		uri: "https://" + process.env.JIRA_BASIC_AUTH + "nakedsky.atlassian.net/rest/api/2/issue/",
+		uri: "https://" + process.env.JIRA_BASIC_AUTH + "@nakedsky.atlassian.net/rest/api/2/issue/",
+		auth:
+		{
+			user:process.env.JIRA_USER,
+			pass:process.env.JIRA_PASS,
+			sendImmediately:true
+		},
 		json: true,
 		body: issue
 	}, function( error, data, body )
