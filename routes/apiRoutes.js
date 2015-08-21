@@ -1,6 +1,9 @@
-var request = require( 'request' );
+"use strict";
 
+var request = require( 'request' );
 var express = require('express');
+var async = require( 'async' );
+
 var router = express.Router();
 
 function verifyToken( token )
@@ -10,13 +13,13 @@ function verifyToken( token )
 		if( req.body.token !== token )
 		{
 			console.log( "token is " + req.body.token + " and expected is " + token );
-			res.status( 401 ).send( "Error: wrong incoming key" )
+			res.status( 401 ).send( "Error: wrong incoming key" );
 		}
 		else
 		{
 			next();
 		}
-	}
+	};
 }
 
 router.post('/necho', verifyToken( process.env.NECHO_TOKEN ), function(req, res) 
@@ -29,8 +32,11 @@ router.post('/necho', verifyToken( process.env.NECHO_TOKEN ), function(req, res)
 router.post( '/jira', verifyToken( process.env.JIRA_TOKEN ), function( req, res )
 {
 	var body = req.body;
-
 	var summary = body.text;
+	var userName = body.user_name;
+
+	var channel = "#scrapforce";
+	var projectKey = "SCRAP";
 
 	var issue =
 	{
@@ -38,30 +44,59 @@ router.post( '/jira', verifyToken( process.env.JIRA_TOKEN ), function( req, res 
 		{
 			"project":
 			{ 
-				"key": "SCRAP"
+				"key": projectKey
 			},
 			"summary": summary,
-			"reporter":{"name":body.user_name},
+			"reporter":{"name":userName},
 			"issuetype": 
 			{
 				"name": "Bug"
 			}
 		}
-   }
-	
-	request(
-	{
-		method: 'POST',
-		uri: "https://" + process.env.JIRA_BASIC_AUTH + "@nakedsky.atlassian.net/rest/api/2/issue/",
-		auth:
+   };
+
+	async.waterfall(
+	[
+		function( callback )
 		{
-			user:process.env.JIRA_USER,
-			pass:process.env.JIRA_PASS,
-			sendImmediately:true
+			request(
+			{
+				method: 'POST',
+				uri: "https://" + process.env.JIRA_BASIC_AUTH + "@" + process.env.JIRA_URL + "/rest/api/2/issue/",
+				auth:
+				{
+					user:process.env.JIRA_USER,
+					pass:process.env.JIRA_PASS,
+					sendImmediately:true
+				},
+				json: true,
+				body: issue
+			}, callback );
 		},
-		json: true,
-		body: issue
-	}, function( error, data, body )
+
+		function( data, responseBody, callback )
+		{
+			//get they key to make a clickable link
+			var text = "https://" + process.env.JIRA_URL + "/issues/" + responseBody.key + "     " + summary;
+
+			var payload  =
+			{
+				"channel": channel,
+				"username": userName,
+				"text": text,
+				"icon_emojoy": ":bug:"
+			};
+
+			request(
+			{
+				method: 'POST',
+				uri: process.env.SLACK_HOOK_URL,
+				json: true,
+				body: payload
+			}, callback );
+		}
+	]
+	,function( error )
 	{
 		if( error )
 		{
@@ -70,10 +105,12 @@ router.post( '/jira', verifyToken( process.env.JIRA_TOKEN ), function( req, res 
 		}
 		else
 		{
-			console.log( "success: " + body );
-			res.send( body );
+			res.status( 200 ).end();
 		}
-	} );
+	});
+	
+	
+	
 
 } );
 
