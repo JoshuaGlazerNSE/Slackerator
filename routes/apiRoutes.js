@@ -84,7 +84,7 @@ router.post( '/jira', verifyToken( process.env.JIRA_TOKEN ), function( req, res 
 				"channel": channel,
 				"username": userName,
 				"text": text,
-				"icon_emojoy": ":bug:"
+				"icon_emoji": ":bug:"
 			};
 
 			request(
