@@ -77,7 +77,7 @@ router.post( '/jira', verifyToken( process.env.JIRA_TOKEN ), function( req, res 
 		function( data, responseBody, callback )
 		{
 			//get they key to make a clickable link
-			var text = "<https://" + process.env.JIRA_URL + "/browse/" + responseBody.key + " | " + responseBody.key + "    " + summary +">";
+			var text = "<https://" + process.env.JIRA_URL + "/browse/" + responseBody.key + " | " + responseBody.key + ">    " + summary;
 
 			var payload  =
 			{
