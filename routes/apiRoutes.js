@@ -35,6 +35,15 @@ router.post( '/jira', verifyToken( process.env.JIRA_TOKEN ), function( req, res 
 	var summary = body.text;
 	var userName = body.user_name;
 
+	//if the username isn't a recognized name, prefix with a colon and make josh report it...
+	var reporterName = userName;
+	var allowedNames = { josh:1, charles:1, jtani:1, justin:1, malika:1 };
+	if( !allowedNames[ reporterName ] )
+	{
+		reporterName = "josh";
+		summary = userName + ": " + summary;
+	}
+
 	var channel = "#scrapforce";
 	var projectKey = "SCRAP";
 
@@ -47,7 +56,7 @@ router.post( '/jira', verifyToken( process.env.JIRA_TOKEN ), function( req, res 
 				"key": projectKey
 			},
 			"summary": summary,
-			"reporter":{"name":userName},
+			"reporter":{"name":reporterName},
 			"issuetype": 
 			{
 				"name": "Bug"
