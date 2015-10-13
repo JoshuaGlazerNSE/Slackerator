@@ -3,9 +3,11 @@
 var request = require( 'request' );
 var express = require('express');
 var async = require( 'async' );
+var path = require( 'path' );
+
 require('ssl-root-cas/latest')
 	.inject()
-	.addFile( __dirname + '/StartSSLca.crt');
+	.addFile( path.join( __dirname, '..', 'StartSSLca.crt' );
 
 var router = express.Router();
 
