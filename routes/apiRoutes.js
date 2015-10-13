@@ -3,6 +3,7 @@
 var request = require( 'request' );
 var express = require('express');
 var async = require( 'async' );
+require('ssl-root-cas/latest').inject();
 
 var router = express.Router();
 
