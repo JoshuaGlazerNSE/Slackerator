@@ -22,12 +22,88 @@ function verifyToken( token )
 	};
 }
 
+function tellSlack( text, channel, userName, icon, callback )
+{
+	var payload  =
+	{
+		"channel": channel,
+		"username": userName,
+		"text": text,
+		"icon_emoji": icon
+	};
+
+	request(
+	{
+		method: 'POST',
+		uri: process.env.SLACK_HOOK_URL,
+		json: true,
+		body: payload
+	}, callback );
+}
+
 router.post('/necho', verifyToken( process.env.NECHO_TOKEN ), function(req, res) 
 {
 	var body = req.body;
 	delete body.token;
 	res.send( JSON.stringify( body ) );
 });
+
+router.post( '/fortbuilder', verifyToken( process.env.FORTBUILDER_TOKEN ), function( req, res )
+{
+	var body = req.body;
+	var deployTarget = body.text;
+	var userName = body.user_name;
+
+	//var channel = "#scrapforceeng";
+	var channel = "@josh";
+
+
+	var allowedNames = { josh:1, charles:1, jtani:1, justin:1 };
+	
+	async.waterfall(
+	[
+
+		function( callback )
+		{
+			if( allowedNames[ userName ] )
+			{
+				//fortbuilder, do your thing!
+				var token = process.env.JENKINS_BUILD_TOKEN;
+				var url = process.env.JENKINS_URL;
+				url = url + "?token=" + token + "&DESIRED_REV=HEAD&DEPLOY_TARGET=" + deployTarget + "&cause=Slack%20Command:%20" + deployTarget;
+
+				request(
+				{
+					method: 'GET',
+					uri: url,
+				}, callback );
+			}
+			else
+			{
+				callback( null, "", "Not authorized to access fortbuilder" );
+			}
+		},
+
+		function( data, responseBody, callback )
+		{
+			console.log( "responseBody from fortbuilder request: " + responseBody );
+			tellSlack( responseBody, channel, userName, ":hammer:", callback );
+		}
+	],
+	function( error )
+	{
+		if( error )
+		{
+			console.log( "Error: " + error );
+			res.status( 500 ).send( error );
+		}
+		else
+		{
+			res.status( 200 ).end();
+		}
+	});
+
+} );
 
 router.post( '/jira', verifyToken( process.env.JIRA_TOKEN ), function( req, res )
 {
@@ -87,22 +163,7 @@ router.post( '/jira', verifyToken( process.env.JIRA_TOKEN ), function( req, res 
 		{
 			//get they key to make a clickable link
 			var text = "<https://" + process.env.JIRA_URL + "/browse/" + responseBody.key + " | " + responseBody.key + ">    " + summary;
-
-			var payload  =
-			{
-				"channel": channel,
-				"username": userName,
-				"text": text,
-				"icon_emoji": ":bug:"
-			};
-
-			request(
-			{
-				method: 'POST',
-				uri: process.env.SLACK_HOOK_URL,
-				json: true,
-				body: payload
-			}, callback );
+			tellSlack( text, channel, userName, ":bug:", callback );
 		}
 	]
 	,function( error )
