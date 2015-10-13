@@ -7,8 +7,24 @@ var path = require( 'path' );
 
 require('ssl-root-cas/latest')
 	.inject()
-	.addFile( path.join( __dirname, '..', 'certs', 'StartSSLca.crt' ) )
-	.addFile( path.join( __dirname, '..', 'certs', 'sub.class1.server.ca.crt' ) );
+	.addFile( path.join( __dirname, '..', 'certs', 'ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'ca-sha2.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class1.client.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class1.client.sha2.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class1.dcsc.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class1.dcsc.sha2.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class1.mobileexperts.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class1.osmio.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class1.osmio.sha2.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class1.server.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class1.server.sha2.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class2.client.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class2.code.sha2.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class2.janrain.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class2.server.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class2.server.sha2.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class3.server.ca.crt' ) )
+	.addFile( path.join( __dirname, '..', 'certs', 'sub.class3.code.ca.crt' ) );
 
 var router = express.Router();
 
