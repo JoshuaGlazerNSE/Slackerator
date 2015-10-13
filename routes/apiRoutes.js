@@ -7,7 +7,7 @@ var path = require( 'path' );
 
 require('ssl-root-cas/latest')
 	.inject()
-	.addFile( path.join( __dirname, '..', 'StartSSLca.crt' );
+	.addFile( path.join( __dirname, '..', 'StartSSLca.crt' ) );
 
 var router = express.Router();
 
