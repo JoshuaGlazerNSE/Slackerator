@@ -93,7 +93,8 @@ router.post( '/fortbuilder', verifyToken( process.env.FORTBUILDER_TOKEN ), funct
 				//fortbuilder, do your thing!
 				var token = process.env.JENKINS_BUILD_TOKEN;
 				var url = process.env.JENKINS_URL;
-				url = url + "?token=" + token + "&DESIRED_REV=HEAD&DEPLOY_TARGET=" + deployTarget + "&cause=Slack%20Command%20" + deployTarget;
+				var cause = "Slack command: " + deployTarget + " from user " + userName;
+				url = url + "?token=" + token + "&DESIRED_REV=HEAD&DEPLOY_TARGET=" + deployTarget + "&cause=" + encodeURIComponent( cause );
 
 				console.log( "url: " + url );
 
@@ -118,6 +119,10 @@ router.post( '/fortbuilder', verifyToken( process.env.FORTBUILDER_TOKEN ), funct
 		function( data, responseBody, callback )
 		{
 			console.log( "responseBody from fortbuilder request: " + responseBody );
+			if( !responseBody )
+			{
+				responseBody = deployTarget + " Build started successfully.  Wouldn't it be nice if you got a message when it finished?";
+			}
 			tellSlack( responseBody, channel, userName, ":hammer:", callback );
 		}
 	],
