@@ -101,6 +101,12 @@ router.post( '/fortbuilder', verifyToken( process.env.FORTBUILDER_TOKEN ), funct
 				{
 					method: 'GET',
 					uri: url,
+					auth:
+					{
+						user:process.env.JENKINS_USER,
+						pass:process.env.JENKINS_API_TOKEN,
+						sendImmediately:true
+					},
 				}, callback );
 			}
 			else
