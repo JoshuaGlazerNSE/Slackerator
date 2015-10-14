@@ -77,9 +77,7 @@ router.post( '/fortbuilder', verifyToken( process.env.FORTBUILDER_TOKEN ), funct
 	var deployTarget = body.text;
 	var userName = body.user_name;
 
-	//var channel = "#scrapforceeng";
-	var channel = "@josh";
-
+	var channel = "#scrapforceeng";
 
 	var allowedNames = { josh:1, charles:1, jtani:1, justin:1 };
 	
