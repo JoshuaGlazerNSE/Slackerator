@@ -94,6 +94,8 @@ router.post( '/fortbuilder', verifyToken( process.env.FORTBUILDER_TOKEN ), funct
 				var url = process.env.JENKINS_URL;
 				url = url + "?token=" + token + "&DESIRED_REV=HEAD&DEPLOY_TARGET=" + deployTarget + "&cause=Slack%20Command:%20" + deployTarget;
 
+				console.log( "url: " + url );
+
 				request(
 				{
 					method: 'GET',
