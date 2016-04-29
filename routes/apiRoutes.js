@@ -79,7 +79,7 @@ router.post( '/fortbuilder', verifyToken( process.env.FORTBUILDER_TOKEN ), funct
 
 	const deployTarget = params[ 0 ].trim();
 
-	const projectName = params.length > 1 : params[ 1 ].trim() : "ScrapForceCurrent";
+	const projectName = params.length > 1 ? params[ 1 ].trim() : "ScrapForceCurrent";
 
 	var userName = body.user_name;
 
