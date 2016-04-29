@@ -17,9 +17,6 @@
     "serve-favicon": "~2.3.0",
     "ssl-root-cas": "^1.1.10"
   },
-  "engines": {
-    "node": "^6.0.0"
-  },
   "eslintConfig": {
     "env": {
       "mocha": true,
