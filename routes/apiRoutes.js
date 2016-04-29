@@ -73,13 +73,19 @@ router.post('/necho', verifyToken( process.env.NECHO_TOKEN ), function(req, res)
 
 router.post( '/fortbuilder', verifyToken( process.env.FORTBUILDER_TOKEN ), function( req, res )
 {
-	var body = req.body;
-	var deployTarget = body.text;
+	const body = req.body;
+	//split this by spaces, we might want muvio
+	const params = body.text.split( " " );
+
+	const deployTarget = params[ 0 ].trim();
+
+	const projectName = params.length > 1 : params[ 1 ].trim() : "ScrapForceCurrent";
+
 	var userName = body.user_name;
 
 	var channel = "#scrapforceeng";
 
-	var allowedNames = { josh:1, charles:1, jtani:1, justin:1 };
+	var allowedNames = { josh:1, charles:1, jtani:1, justin:1, john: 1 };
 	
 	async.waterfall(
 	[
@@ -91,7 +97,10 @@ router.post( '/fortbuilder', verifyToken( process.env.FORTBUILDER_TOKEN ), funct
 				//fortbuilder, do your thing!
 				var token = process.env.JENKINS_BUILD_TOKEN;
 				var url = process.env.JENKINS_URL;
-				var cause = "Slack command: " + deployTarget + " from user " + userName;
+
+				url = url.replace( "{0}", projectName );
+
+				var cause = "Slack command: " + deployTarget + " for project" + projectName + " from user " + userName;
 				url = url + "?token=" + token + "&DESIRED_REV=HEAD&DEPLOY_TARGET=" + deployTarget + "&cause=" + encodeURIComponent( cause );
 
 				console.log( "url: " + url );
@@ -119,7 +128,7 @@ router.post( '/fortbuilder', verifyToken( process.env.FORTBUILDER_TOKEN ), funct
 			console.log( "responseBody from fortbuilder request: " + responseBody );
 			if( !responseBody )
 			{
-				responseBody = deployTarget + " Build started successfully.  Wouldn't it be nice if you got a message when it finished?";
+				responseBody = deployTarget + " " + projectName + " Build started successfully.  Wouldn't it be nice if you got a message when it finished?";
 			}
 			tellSlack( responseBody, channel, userName, ":hammer:", callback );
 		}
