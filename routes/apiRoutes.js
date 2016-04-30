@@ -85,7 +85,7 @@ router.post( '/fortbuilder', verifyToken( process.env.FORTBUILDER_TOKEN ), funct
 
 	var channel = "#scrapforceeng";
 
-	var allowedNames = { josh:1, charles:1, jtani:1, justin:1, john: 1 };
+	var allowedNames = { josh:1, charles:1, jtani:1, justin:1, johnschwarz: 1 };
 	
 	async.waterfall(
 	[
